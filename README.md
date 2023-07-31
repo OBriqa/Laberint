@@ -1,4 +1,5 @@
 # Laberint
+## Implementació d'una representació d'un laberint. Creació de laberints i resolució d'aquests.
 
 Pràctica de l'assignatura d'ESIN on implementem el disseny d'una representació d'un laberint, partint des de les parets i formant cambres.
 
