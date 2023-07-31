@@ -7,4 +7,4 @@ Tenim dues classes, dedalus i teseus, que serveixen per construir laberints (per
 
 Per resoldre els laberints, utilitzem l'algorisme de Dijkstra. Podeu trobar una petita descripció a l'arxiu corresponent (teseus.cpp)
 
-Pràctica realitzada per Joaquim Hervás i Omar Briqa.
+Pràctica realitzada per [Joaquim Hervás](https://github.com/Hospuntake) i Omar Briqa.
