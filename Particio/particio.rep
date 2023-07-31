@@ -1,0 +1,70 @@
+struct node_hash {
+    T _k;
+    nat _n;
+    node_hash* _seg;
+    node_hash* _presi;
+    node_hash(const T &k, nat n, node_hash* seg, node_hash* presi = NULL) throw(error);
+};
+
+node_hash **_taula;
+nat _mida;
+nat _grups;
+nat _maxim;
+nat _elements;
+
+// PRE:  Cert
+// POST: Retorna cert si l'element k és a la partició
+bool buscar(const T& k) const;
+
+// PRE:  L'element k no hi és a la partició
+// POST: S'ha afegit l'element k a la partició, el nombre d'elements i el nombre de grups s'incrementen en 1
+void insereix(const T& k);
+
+// PRE:  Cert
+// POST: S'ha alliberat tota la memòria assignada per la taula de dispersió 'taula'
+void destruir_taula(node_hash** taula, nat mida) throw();
+
+// PRE:  Cert
+// POST: S'han copiat tots els nodes del punter 'taula' al paràmetre implícit.
+void copia_nodes(node_hash** taula, nat mida) throw();
+
+
+// Per representar la classe partició hem utilitzat diccionaris. Concretament, taules de dispersió
+// amb encadenaments indirectes.
+
+// La raó principal per la qual hem escollit aquesta opció és per la senzillesa de la implementació i 
+// l'adaptació de les seves característiques als nostres objectius.
+
+// Volem una estructura de dades còmoda que ens permeti accedir ràpidament als seus elements.
+// Com es tracta d'una partició d'elements, volem conèixer tots els grups, els elements que formen
+// cada grup, la quantitat d'elements...
+
+// Altres representacions possibles que vam pensar van ser els Arbres Binaris de Cerca Equilibrats (AVL),
+// però l'operació d'equilibrar l'arbre ens va fer rebutjar l'opció. Un altre possibilitat també va  
+// ser les tries, no obstant ens era més còmode treballar amb taules de dispersió.
+
+// La representació de la classe partició està formada principalment per un punter a un 
+// array de punters a node _taula. El node "node_hash" és el contenidor d'informació principal de la classe.
+
+// Cada node consta de:
+//      -> Un valor _k, que és l'element tipus T de la partició.
+//      -> Un natural _n, que és el nombre d'elements que apunten a ell.
+//      -> Un punter a node _seg, que indica el següent element de la llista de nodes de la seva posició.
+//      -> Un punter a node _presi, que és el node del representant del grup on està l'element actual.
+//         El punter _presi d'un node d'un representant d'un grup apunta al mateix node.
+
+// A més a més, tenim uns quants naturals que emmagatzemen informació important de la taula de dispersió.
+// Aquests són:
+//      -> _mida: que és el nombre màxim d'elements afegint-hi un factor més per dispersar millor els elements.
+//      -> _grups: indica el nombre de grups que hi formen la partició.
+//      -> _màxims: indica el nombre màxim d'elements que pot emmagatzemar la taula de dispersió.
+//      -> _elements: indica el nombre d'elements que hi ha emmagatzemats a la partició.
+
+// Per millorar l'eficiència de les operacions buscar i inserir, que són les més utilitzades, hem afegit unes quantes millores:
+//      -> La mida de la taula no és exactament el nombre màxim d'elements, sinó que és més gran, concretament s'ha multiplicat
+//         per un factor de 1.25. Això ens permet mantenir un bon factor de càrrega i no saturar massa la taula.
+//      -> Els elements que s'ubiquen a la mateixa posició de la taula de dispersió (sinònims) s'emmagatzemen en una llista 
+//         simplement encadenada i ordenada creixentment. En el cas que l'element sigui petit, el podríem trobar a l'inici i ens 
+//         estalviaríem recórrer tots els altres elements.
+//      -> A l'hora d'unir dos grups (els seus representants), fem ús de la tècnica d'unió per pes per a posar el 
+//         representant amb menys elements apuntats com a fill del representant amb més elements que li apunten.
